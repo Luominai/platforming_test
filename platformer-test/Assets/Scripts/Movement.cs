@@ -9,6 +9,7 @@ public class Movement : MonoBehaviour
     public float acceleration;
     public float decceleration;
     public float topSpeed;
+    public Rigidbody2D rigidBody;
 
     // Current velocity
     private float xVelocity;
@@ -44,6 +45,7 @@ public class Movement : MonoBehaviour
     void getInput()
     {
         jumpButtonDown = Input.GetButtonDown("Jump");
+        jumpButtonUp = Input.GetButtonUp("Jump");
         xInput = Input.GetAxisRaw("Horizontal");
         yInput = Input.GetAxisRaw("Vertical");
     }
@@ -67,10 +69,19 @@ public class Movement : MonoBehaviour
 
     }
 
+    void jump()
+    {
+        if (jumpButtonDown)
+        {
+
+        }
+    }
+
     // Move based on velocity
     void move()
     {
-        var movement = new Vector3(xVelocity, yVelocity) * Time.deltaTime;
-        transform.position = transform.position + movement;
+        // var movement = new Vector3(xVelocity, yVelocity) * Time.deltaTime;
+        // transform.position = transform.position + movement;
+        rigidBody.velocity = new Vector2(xVelocity, rigidBody.velocity.y);
     }
 }
