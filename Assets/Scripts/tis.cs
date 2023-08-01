@@ -21,7 +21,7 @@ public class tis : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.B))
         {
-            transform.localScale -= new Vector3(0.5f, 0.1f, 0f);
+            transform.localScale -= new Vector3(.05f, .01f, 0f);
         }
     }
 }
