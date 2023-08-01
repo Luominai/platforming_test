@@ -30,6 +30,7 @@ public class Movement : MonoBehaviour
     private float xInput;
     private float yInput;
 
+    private bool facingLeft = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +44,7 @@ public class Movement : MonoBehaviour
         getInput();
         updateSpeed();
         move();
+        flip();
     }
 
     // Collecting input
@@ -96,5 +98,18 @@ public class Movement : MonoBehaviour
         // var movement = new Vector3(xVelocity, yVelocity) * Time.deltaTime;
         // transform.position = transform.position + movement;
         rigidBody.velocity = new Vector2(xVelocity, rigidBody.velocity.y);
+    }
+
+    void flip()
+    {
+        if (xVelocity > 0) {
+            facingLeft = true;
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
+        }
+        else if (xVelocity < 0)
+        {
+            facingLeft = false;
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 }
