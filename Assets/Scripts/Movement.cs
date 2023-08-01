@@ -9,7 +9,10 @@ public class Movement : MonoBehaviour
     public float acceleration;
     public float decceleration;
     public float topSpeed;
+    public float rayLength;
+    public float sideBuffer;
     public Rigidbody2D rigidBody;
+    public BoxCollider2D boxCollider;
 
     // Current velocity
     private float xVelocity;
@@ -36,6 +39,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        collisionChecks();
         getInput();
         updateSpeed();
         move();
@@ -66,7 +70,16 @@ public class Movement : MonoBehaviour
 
     void collisionChecks()
     {
+        Vector2 center = boxCollider.bounds.center;
+        float extentsX = boxCollider.bounds.extents.x - sideBuffer;
+        float extentsY = boxCollider.bounds.extents.y;
+        Vector2 leftCorner = center + new Vector2(-extentsX, -extentsY);
+        Vector2 rightCorner = center + new Vector2(extentsX, -extentsY);
 
+        Physics2D.BoxCast(center, new Vector2(2 * extentsX, 2 * extentsY), 0f, Vector2.down, rayLength);
+        Debug.DrawRay(leftCorner, new Vector2(0, -rayLength), Color.green);
+        Debug.DrawRay(rightCorner,  new Vector2(0, -rayLength), Color.green);
+        Debug.DrawRay(leftCorner - new Vector2(0, rayLength), new Vector2(2 * extentsX, 0), Color.green);
     }
 
     void jump()
