@@ -45,6 +45,7 @@ public class Movement : MonoBehaviour
         updateSpeed();
         move();
         flip();
+        jump();
     }
 
     // Collecting input
@@ -88,7 +89,7 @@ public class Movement : MonoBehaviour
     {
         if (jumpButtonDown)
         {
-
+            GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
         }
     }
 
