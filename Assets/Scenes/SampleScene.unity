@@ -396,10 +396,13 @@ MonoBehaviour:
   acceleration: 150
   decceleration: 100
   topSpeed: 8
-  rayLength: 0.25
+  rayLength: 0.1
   sideBuffer: 0.1
   rigidBody: {fileID: 1090305537}
   boxCollider: {fileID: 1090305536}
+  ground:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!61 &1090305536
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -512,9 +515,9 @@ GameObject:
   - component: {fileID: 1356055449}
   - component: {fileID: 1356055450}
   - component: {fileID: 1356055451}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

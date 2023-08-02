@@ -21,6 +21,7 @@ public class Movement : MonoBehaviour
     // Get when the jump button (space) is pressed and released
     private bool jumpButtonDown;
     private bool jumpButtonUp;
+    private bool isGrounded;
 
     // Gets horizontal and vertical inputs (-1, 0, or 1)
     // W: Positive Y value
@@ -31,6 +32,10 @@ public class Movement : MonoBehaviour
     private float yInput;
 
     private bool facingLeft = true;
+
+    // Specify which layer is the ground
+    public LayerMask ground;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +45,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        collisionChecks();
+        groundCheck();
         getInput();
         updateSpeed();
         move();
@@ -71,7 +76,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    void collisionChecks()
+    void groundCheck()
     {
         Vector2 center = boxCollider.bounds.center;
         float extentsX = boxCollider.bounds.extents.x - sideBuffer;
@@ -79,15 +84,24 @@ public class Movement : MonoBehaviour
         Vector2 leftCorner = center + new Vector2(-extentsX, -extentsY);
         Vector2 rightCorner = center + new Vector2(extentsX, -extentsY);
 
-        Physics2D.BoxCast(center, new Vector2(2 * extentsX, 2 * extentsY), 0f, Vector2.down, rayLength);
+        var hit = Physics2D.BoxCast(center, new Vector2(2 * extentsX, 2 * extentsY), 0f, Vector2.down, rayLength, ground);
         Debug.DrawRay(leftCorner, new Vector2(0, -rayLength), Color.green);
         Debug.DrawRay(rightCorner,  new Vector2(0, -rayLength), Color.green);
         Debug.DrawRay(leftCorner - new Vector2(0, rayLength), new Vector2(2 * extentsX, 0), Color.green);
+
+        if (hit.collider)
+        {
+            Debug.Log("Touched Ground");
+            isGrounded = true;
+        } else
+        {
+            isGrounded = false;
+        }
     }
 
     void jump()
     {
-        if (jumpButtonDown)
+        if (jumpButtonDown && isGrounded)
         {
             GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
         }
@@ -113,4 +127,5 @@ public class Movement : MonoBehaviour
             transform.localRotation = Quaternion.Euler(0, 0, 0);
         }
     }
+
 }
