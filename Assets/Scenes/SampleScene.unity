@@ -400,6 +400,7 @@ MonoBehaviour:
   sideBuffer: 0.1
   rigidBody: {fileID: 1090305537}
   boxCollider: {fileID: 1090305536}
+  jumpBuffer: 0.1
   ground:
     serializedVersion: 2
     m_Bits: 8
@@ -474,7 +475,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &1090305538
 MonoBehaviour:
   m_ObjectHideFlags: 0

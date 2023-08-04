@@ -19,9 +19,13 @@ public class Movement : MonoBehaviour
     private float yVelocity;
 
     // Get when the jump button (space) is pressed and released
+    public float jumpBuffer;
+    private bool jumpBuffered;
+    private float jumpBufferTime;
     private bool jumpButtonDown;
     private bool jumpButtonUp;
     private bool isGrounded;
+    private bool jumpCanceled;
 
     // Gets horizontal and vertical inputs (-1, 0, or 1)
     // W: Positive Y value
@@ -48,9 +52,9 @@ public class Movement : MonoBehaviour
         groundCheck();
         getInput();
         updateSpeed();
+        jump();
         move();
         flip();
-        jump();
     }
 
     // Collecting input
@@ -91,8 +95,16 @@ public class Movement : MonoBehaviour
 
         if (hit.collider)
         {
-            Debug.Log("Touched Ground");
+            Debug.Log("Touching Ground");
             isGrounded = true;
+            jumpCanceled = false;
+
+            if (jumpBuffered && (Time.time - jumpBufferTime < jumpBuffer))
+            {
+                rigidBody.velocity = new Vector2(xVelocity, 10);
+            }
+            jumpBuffered = false;
+
         } else
         {
             isGrounded = false;
@@ -103,7 +115,19 @@ public class Movement : MonoBehaviour
     {
         if (jumpButtonDown && isGrounded)
         {
-            GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
+            // rigidBody.AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
+            rigidBody.velocity = new Vector2(xVelocity, 10);
+        }
+        if (jumpButtonDown && !isGrounded)
+        {
+            jumpBuffered = true;
+            jumpBufferTime = Time.time;
+        }
+        if (jumpButtonUp && !isGrounded && rigidBody.velocity.y > 0)
+        {
+            print("extra grav");
+            rigidBody.velocity = new Vector2(xVelocity, 0);
+            jumpCanceled = true;
         }
     }
 
@@ -112,7 +136,15 @@ public class Movement : MonoBehaviour
     {
         // var movement = new Vector3(xVelocity, yVelocity) * Time.deltaTime;
         // transform.position = transform.position + movement;
-        rigidBody.velocity = new Vector2(xVelocity, rigidBody.velocity.y);
+
+        var additionalGravity = 0f;
+
+        if (jumpCanceled)
+        {
+            additionalGravity = -.1f;
+        }
+
+        rigidBody.velocity = new Vector2(xVelocity, Mathf.Clamp(rigidBody.velocity.y + additionalGravity, -topSpeed, topSpeed));
     }
 
     void flip()
